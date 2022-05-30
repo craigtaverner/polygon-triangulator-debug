@@ -1,5 +1,8 @@
+# Gradle.
+# Ignore the generated local settings file.
+/gradle.properties
 .gradle
-/build/
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -12,3 +15,32 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+# Ignore gradle wrapper jar.
+gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+/.idea/
+#    IntelliJ creates this folder, ignore.
+/dev-tools/missing-doclet/out/
+
+# Eclipse
+/.project
+/.classpath
+/.settings/
+
+# Eclipse Gradle oddity
+**/bin/default/
+
+# macOS
+.DS_Store
+
+# Python
+.pydevproject
+__pycache__
+
+# Emacs backup
+*~
+
+# SDKMAN
+.sdkmanrc
