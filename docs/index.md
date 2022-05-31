@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to polygon-triangulator-debug
 
 You can use the [editor on GitHub](https://github.com/craigtaverner/polygon-triangulator-debug/edit/gh-pages/docs/index.md) to maintain and preview the content for your website in Markdown files.
 
