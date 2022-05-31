@@ -122,8 +122,8 @@ For example the following command:
 
 Would make images starting with:
 
-![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00000.png?raw=true "Lucene-10563-1 Polygon")
+![Lucene-10563-1 Polygon](images/lucene-10563-1/lucene-10563-1-00000.png?raw=true "Lucene-10563-1 Polygon")
 
 About half way through the triangulation algorithm, we would see:
 
-![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00200.png?raw=true "Lucene-10563-1 Polygon")
+![Lucene-10563-1 Polygon](images/lucene-10563-1/lucene-10563-1-00200.png?raw=true "Lucene-10563-1 Polygon")
