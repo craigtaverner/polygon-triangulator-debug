@@ -1,5 +1,3 @@
-# polygon-triangulator-debug
-
 Visual approach to debugging the polygon triangulation algorithm in the Apache Lucene `Tessellator` class.
 It implements the `Tessellator.Monitor` interface to receive events during the triangulation algorithm,
 and uses these events to generate PNG images of the incoming polygon together with the current status
