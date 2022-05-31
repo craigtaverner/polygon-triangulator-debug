@@ -6,7 +6,8 @@ of the internal linked-list of nodes and set of completed triangles generated so
 The images can be stitched together into a video using tools like `ffmpeg`:
 
 ```bash
-ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 \
+  -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
 ```
 
 There are two ways to run the monitor:
