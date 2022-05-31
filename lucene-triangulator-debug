@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+echo $0
+BASEDIR=$(dirname $0)
+DISTRIBDIR=$BASEDIR/tmp
+ARCHIVE=$BASEDIR/app/build/distributions/app.zip
+
+if [ -f $ARCHIVE ] ; then
+  rm -Rf $DISTRIBDIR
+  mkdir -p $DISTRIBDIR
+  unzip $ARCHIVE -d $DISTRIBDIR
+  ls -l $DISTRIBDIR
+  $DISTRIBDIR/app/bin/app $@
+else
+  echo "No archive found, have you run ./gradlew build?"
+  exit 1
+fi
