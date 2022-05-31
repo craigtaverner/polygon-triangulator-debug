@@ -21,6 +21,7 @@ public class App {
         String dir = DEFAULT_DIR;
         boolean help = false;
         boolean verbose = false;
+        boolean labels = false;
         int width = DEFAULT_WIDTH;
         int height = DEFAULT_HEIGHT;
         int margin = DEFAULT_MARGIN;
@@ -30,6 +31,7 @@ public class App {
                 switch (args[i]) {
                     case "-h", "--help" -> help = true;
                     case "-v", "--verbose" -> verbose = true;
+                    case "-l", "--labels" -> labels = true;
                     case "-D", "--dir" -> dir = args[++i];
                     case "-W", "--width" -> width = Integer.parseInt(args[++i]);
                     case "-H", "--height" -> height = Integer.parseInt(args[++i]);
@@ -46,6 +48,7 @@ public class App {
                     options:
                         -h | --help       Output this help
                         -v | --verbose    Verbose output: %b
+                        -l | --labels     Add labels to images: %b
                         -D | --dir        Set the output directory for image files: '%s'
                         -W | --width      Set the image width: %d
                         -H | --height     Set the image height: %d
@@ -62,10 +65,10 @@ public class App {
                             
                     For example, with a name like 'polygon-1' we will have files named 'polygon-1-0001.png' and can
                     generate a video with a command like:
-                        ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%04d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
-                    %n""", verbose, dir, width, height, margin, dir);
+                        ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+                    %n""", verbose, labels, dir, width, height, margin, dir);
         } else {
-            TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of(dir), width, height, margin, verbose);
+            TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of(dir), width, height, margin, verbose, labels);
             App app = new App();
             for (String name : names) {
                 try {

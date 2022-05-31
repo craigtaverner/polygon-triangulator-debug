@@ -24,7 +24,7 @@ public class AppTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
         App.main(new String[]{});
-        assertExpectedHelpOutput(output.toString(), false, App.DEFAULT_DIR, App.DEFAULT_WIDTH, App.DEFAULT_HEIGHT, App.DEFAULT_MARGIN);
+        assertExpectedHelpOutput(output.toString(), false, false, App.DEFAULT_DIR, App.DEFAULT_WIDTH, App.DEFAULT_HEIGHT, App.DEFAULT_MARGIN);
     }
 
     @Test
@@ -44,9 +44,9 @@ public class AppTest {
     public void shouldUnderstandOptions() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
-        App.main(new String[]{"-v", "-D", "/tmp/another", "-W", "5000", "-H", "3000", "-M", "1234"});
+        App.main(new String[]{"-v", "-l", "-D", "/tmp/another", "-W", "5000", "-H", "3000", "-M", "1234"});
         assertThat("Expected help output", out.toString(), containsString("usage: lucene"));
-        assertExpectedHelpOutput(out.toString(), true, "/tmp/another", 5000, 3000, 1234);
+        assertExpectedHelpOutput(out.toString(), true, true, "/tmp/another", 5000, 3000, 1234);
     }
 
     @Test
@@ -90,9 +90,10 @@ public class AppTest {
         assertThat("Expected many image files", countFilesIn(App.DEFAULT_DIR, "lucene-10563-1"), greaterThan(400));
     }
 
-    private void assertExpectedHelpOutput(String text, boolean verbose, String dir, int width, int height, int margin) {
+    private void assertExpectedHelpOutput(String text, boolean verbose, boolean labels, String dir, int width, int height, int margin) {
         assertThat("Expected help output", text, containsString("usage: lucene"));
         assertThat("Expected verbose " + verbose, text, containsString("Verbose output: " + verbose));
+        assertThat("Expected labels " + verbose, text, containsString("Add labels to images: " + labels));
         assertThat("Expected dir " + dir, text, containsString("Set the output directory for image files: '" + dir));
         assertThat("Expected width " + width, text, containsString("Set the image width: " + width));
         assertThat("Expected height " + height, text, containsString("Set the image height: " + height));

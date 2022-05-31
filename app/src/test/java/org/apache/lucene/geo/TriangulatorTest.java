@@ -17,6 +17,7 @@
 package org.apache.lucene.geo;
 
 import org.amanzi.lucene.geo.TriangulationMonitor;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -31,7 +32,23 @@ import static org.junit.Assert.fail;
  * Test case for the Polygon {@link TessellatorX} class
  */
 public class TriangulatorTest {
-    private final TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100, false);
+    private final TriangulationMonitor.Config baseConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100);
+    private final TriangulationMonitor.Config imageConfig = baseConfig.withLabels();
+
+    @Ignore
+    // This polygon takes way too long to include in regular testing
+    public void testComplexPolygon48() throws Exception {
+        String geoJson = PolygonUtils.readShape("lucene-10470-3.geojson.gz");
+        Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
+        for (Polygon polygon : polygons) {
+            List<TessellatorX.Triangle> tessellation = TessellatorX.tessellate(polygon, true, new TriangulationMonitor("lucene-10470-3", polygon, baseConfig));
+            // calculate the area of big polygons have numerical error
+            assertEquals(area(polygon), area(tessellation), 1e-11);
+            for (TessellatorX.Triangle t : tessellation) {
+                checkTriangleEdgesFromPolygon(polygon, t);
+            }
+        }
+    }
 
     @Test
     public void shouldTriangulateComplexPolygon_10563_1() throws Exception {

@@ -77,8 +77,8 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
     }
 
     private String fileName() {
-        String indexString = "000" + index;
-        return name + "-" + indexString.substring(indexString.length() - 4) + ".png";
+        String indexString = "0000" + index;
+        return name + "-" + indexString.substring(indexString.length() - 5) + ".png";
     }
 
     private void drawTriangles(Graphics2D graphics, Color color, Stroke stroke, List<TessellatorX.Triangle> tessellation) {
@@ -107,13 +107,27 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
         private final int height;
         private final int margin;
         private final boolean verbose;
+        private final boolean labels;
 
-        public Config(Path path, int width, int height, int margin, boolean verbose) {
+        public Config(Path path, int width, int height, int margin) {
+            this(path, width, height, margin, false, false);
+        }
+
+        public Config(Path path, int width, int height, int margin, boolean verbose, boolean labels) {
             this.path = path;
             this.width = width;
             this.height = height;
             this.margin = margin;
             this.verbose = verbose;
+            this.labels = labels;
+        }
+
+        public Config withLabels() {
+            return new Config(this.path, this.width, this.height, this.margin, this.verbose, true);
+        }
+
+        public Config makeVerbose() {
+            return new Config(this.path, this.width, this.height, this.margin, true, this.labels);
         }
     }
 
@@ -248,7 +262,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
             } else {
                 shape.lineTo(x, y);
             }
-            if (labelPrefix != null)
+            if (config.labels && labelPrefix != null)
                 labels.add(new Label(labelPrefix + i, x, y, x(avLon), y(avLat), sign, 14f, Color.WHITE));
         }
         shape.closePath();
@@ -276,7 +290,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
             }
             px = x;
             py = y;
-            if (useLabels)
+            if (config.labels && useLabels)
                 labels.add(new Label(Integer.toString(count), x, y, config.width / 2, config.height / 2, 1, 10f, Color.WHITE));
             count++;
         }
