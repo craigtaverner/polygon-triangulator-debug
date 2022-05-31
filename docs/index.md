@@ -155,3 +155,13 @@ Would make images starting with:
 About half way through the triangulation algorithm, we would see:
 
 ![Lucene-10563-1 Polygon](images/lucene-10563-1/lucene-10563-1-00200.png?raw=true "Lucene-10563-1 Polygon")
+
+A complete video of the triangulation process looks like:
+
+<video src="videos/lucene-10653-1.mp4" controls="controls" style="max-width: 730px;">
+</video>
+
+A much larger polygon, with labels removed:
+
+<video src="videos/lucene-10470-3.mp4" controls="controls" style="max-width: 730px;">
+</video>
