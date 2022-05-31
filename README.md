@@ -114,3 +114,16 @@ the class `org.amanzi.lucene.geo.App`:
     For example, with a name like 'polygon-1' we will have files named 'polygon-1-0001.png' and can
     generate a video with a command like:
         ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+
+
+For example the following command:
+
+    ./lucene-triangulator-debug -D docs/images -l -W 1000 -H 600 -M 50 app/src/main/resources/org/apache/lucene/geo/lucene-10563-1.geojson.gz
+
+Would make images starting with:
+
+![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00000.png?raw=true "Lucene-10563-1 Polygon")
+
+About half way through the triangulation algorithm, we would see:
+
+![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00200.png?raw=true "Lucene-10563-1 Polygon")
