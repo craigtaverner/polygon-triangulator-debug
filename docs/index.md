@@ -158,10 +158,10 @@ About half way through the triangulation algorithm, we would see:
 
 A complete video of the triangulation process looks like:
 
-<video src="videos/lucene-10653-1.mp4" controls="controls" style="max-width: 730px;">
+<video src="videos/lucene-10653-1.mp4" controls="controls" style="max-width: 1000px;">
 </video>
 
 A much larger polygon, with labels removed:
 
-<video src="videos/lucene-10470-3.mp4" controls="controls" style="max-width: 730px;">
+<video src="videos/lucene-10470-3.mp4" controls="controls" style="max-width: 1000px;">
 </video>
