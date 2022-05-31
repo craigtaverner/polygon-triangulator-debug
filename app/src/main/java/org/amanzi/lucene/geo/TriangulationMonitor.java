@@ -18,8 +18,7 @@ import java.util.List;
 public class TriangulationMonitor implements TessellatorX.Monitor {
     private final String name;
     private final Config config;
-    private Polygon polygon;
-    private List<TessellatorX.Triangle> tessellation;
+    private final Polygon polygon;
     private List<Point> leftPoints;
     private List<Point> rightPoints;
     private List<Point> diagonalPoints;
@@ -193,8 +192,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof Label) {
-                Label other = (Label) obj;
+            if (obj instanceof Label other) {
                 return x() == other.x() && y() == other.y();
             } else {
                 return false;
@@ -297,7 +295,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
         graphics.drawLine(px, py, fx, fy);
     }
 
-    private Graphics2D drawBaseImage(Graphics2D graphics, String status, List<TessellatorX.Triangle> tessellation, List<Label> labels) {
+    private void drawBaseImage(Graphics2D graphics, String status, List<TessellatorX.Triangle> tessellation, List<Label> labels) {
         graphics.setColor(background);
         graphics.fillRect(0, 0, config.width, config.height);
         boolean ignoreHoleLabels = status != null && (status.contains("CURE") || status.contains("SPLIT"));
@@ -306,7 +304,6 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
         if (leftPoints != null) drawLines(graphics, labels, Color.CYAN, new BasicStroke(8), leftPoints, false);
         if (rightPoints != null) drawLines(graphics, labels, Color.GREEN, new BasicStroke(5), rightPoints, false);
         if (diagonalPoints != null) drawLines(graphics, labels, Color.BLUE, new BasicStroke(5), diagonalPoints, false);
-        return graphics;
     }
 
     private void drawLabels(Graphics2D graphics, String status, List<Label> labels) {
@@ -325,7 +322,6 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
 
     @Override
     public void currentState(String status, List<Point> points, List<TessellatorX.Triangle> tessellation) {
-        if (tessellation != null) this.tessellation = tessellation;
         Path imagePath = Path.of(config.path.resolve(name).toString(), fileName());
         if (config.verbose) System.out.println("Saving image: " + imagePath);
         BufferedImage bi = new BufferedImage(config.width, config.height, BufferedImage.TYPE_INT_RGB);

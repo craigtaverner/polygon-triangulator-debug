@@ -102,7 +102,6 @@ public class AppTest {
 
     private static int countFilesIn(String path, String name) {
         File dir = Path.of(path).resolve(name).toFile();
-        File[] x = dir.listFiles((d, n) -> n.startsWith(name));
         return Objects.requireNonNull(dir.listFiles((d, n) -> n.startsWith(name))).length;
     }
 
