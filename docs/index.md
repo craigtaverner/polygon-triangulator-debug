@@ -7,7 +7,9 @@ of the internal linked-list of nodes and set of completed triangles generated so
 
 The images can be stitched together into a video using tools like `ffmpeg`:
 
-    ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+```bash
+ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+```
 
 There are two ways to run the monitor:
 
@@ -18,6 +20,7 @@ There are two ways to run the monitor:
 
 Consider a test within Lucene, for example:
 
+```java
     @Test
     public void testComplexPolygon48() throws Exception {
         String geoJson = PolygonUtils.readShape("lucene-10470-3.geojson.gz");
@@ -31,14 +34,19 @@ Consider a test within Lucene, for example:
             }
         }
     }
+```
 
 It is as simple as adding an extra argument to the `Tessellator.tesselate()` call:
 
+```java
     Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10470-3", polygon, imageConfig));
+```
 
 Where the `imageConfig` defines the size of images to generate:
 
+```java
     TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100);
+```
 
 If the polygons are not too large, it is particularly useful to show labels of the vertices of the polygons and the
 internal linked-list using:
@@ -47,6 +55,7 @@ internal linked-list using:
 
 A complete test that includes this could look like:
 
+```java
     @Test
     public void testComplexPolygon48() throws Exception {
         TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100).withLabels();
@@ -61,6 +70,7 @@ A complete test that includes this could look like:
             }
         }
     }
+```
 
 Note in the two examples above we used different polygons:
 
