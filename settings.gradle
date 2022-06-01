@@ -5,5 +5,5 @@ pluginManagement {
   }
 }
 
-rootProject.name = 'lucene-triangulator-debug'
+rootProject.name = 'polygon-triangulator-debug'
 include('app')

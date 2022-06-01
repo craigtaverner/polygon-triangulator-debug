@@ -44,7 +44,7 @@ public class App {
         }
         if (help || names.size() < 1) {
             System.out.printf("""
-                    usage: lucene-triangulator-debug <--options> name1 <name2...>
+                    usage: polygon-triangulator-debug <--options> name1 <name2...>
                     options:
                         -h | --help       Output this help
                         -v | --verbose    Verbose output: %b
