@@ -44,3 +44,6 @@ __pycache__
 
 # SDKMAN
 .sdkmanrc
+
+# Local temp files
+/tmp/
