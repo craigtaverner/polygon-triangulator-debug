@@ -2,7 +2,7 @@ package org.amanzi.lucene.geo;
 
 import org.apache.lucene.geo.Polygon;
 import org.apache.lucene.geo.PolygonUtils;
-import org.apache.lucene.geo.TessellatorX;
+import org.apache.lucene.geo.Tessellator;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -107,7 +107,7 @@ public class TriangulationMonitorApp {
         for (Polygon polygon : polygons) {
             String wkt = PolygonUtils.toWKT(polygon);
             System.out.println(wkt);
-            TessellatorX.tessellate(polygon, true, new TriangulationMonitor(name, polygon, imageConfig));
+            Tessellator.tessellate(polygon, true, new TriangulationMonitor(name, polygon, imageConfig));
         }
     }
 

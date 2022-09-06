@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Test case for the Polygon {@link TessellatorX} class
+ * Test case for the Polygon {@link Tessellator} class
  */
 public class TriangulatorTest {
     private final TriangulationMonitor.Config baseConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100);
@@ -41,10 +41,10 @@ public class TriangulatorTest {
         String geoJson = PolygonUtils.readShape("lucene-10470-3.geojson.gz");
         Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
         for (Polygon polygon : polygons) {
-            List<TessellatorX.Triangle> tessellation = TessellatorX.tessellate(polygon, true, new TriangulationMonitor("lucene-10470-3", polygon, baseConfig));
+            List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10470-3", polygon, baseConfig));
             // calculate the area of big polygons have numerical error
             assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (TessellatorX.Triangle t : tessellation) {
+            for (Tessellator.Triangle t : tessellation) {
                 checkTriangleEdgesFromPolygon(polygon, t);
             }
         }
@@ -57,10 +57,10 @@ public class TriangulatorTest {
         for (Polygon polygon : polygons) {
             String wkt = toWKT(polygon);
             System.out.println(wkt);
-            List<TessellatorX.Triangle> tessellation = TessellatorX.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-1", polygon, imageConfig));
+            List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-1", polygon, imageConfig));
             // calculate the area of big polygons have numerical error
             assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (TessellatorX.Triangle t : tessellation) {
+            for (Tessellator.Triangle t : tessellation) {
                 checkTriangleEdgesFromPolygon(polygon, t);
             }
         }
@@ -74,7 +74,7 @@ public class TriangulatorTest {
             String wkt = toWKT(polygon);
             System.out.println(wkt);
             try {
-                TessellatorX.tessellate(polygon, false, new TriangulationMonitor("lucene-10563-2", polygon, imageConfig));
+                Tessellator.tessellate(polygon, false, new TriangulationMonitor("lucene-10563-2", polygon, imageConfig));
                 fail("Should not complete triangulation due to polygon containing crossing lines");
             } catch (IllegalArgumentException e) {
                 assertThat("Expected the polygon to fail", e.getMessage(), containsString("Possible malformed shape detected"));
@@ -90,7 +90,7 @@ public class TriangulatorTest {
             String wkt = toWKT(polygon);
             System.out.println(wkt);
             try {
-                TessellatorX.tessellate(polygon, false, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
+                Tessellator.tessellate(polygon, false, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
                 fail("Should not complete triangulation due to polygon containing crossing lines");
             } catch (IllegalArgumentException e) {
                 assertThat("Expected the polygon to fail", e.getMessage(), containsString("Possible malformed shape detected"));
@@ -135,9 +135,9 @@ public class TriangulatorTest {
         return area;
     }
 
-    private double area(List<TessellatorX.Triangle> triangles) {
+    private double area(List<Tessellator.Triangle> triangles) {
         double area = 0;
-        for (TessellatorX.Triangle t : triangles) {
+        for (Tessellator.Triangle t : triangles) {
             double[] lats = new double[]{t.getY(0), t.getY(1), t.getY(2), t.getY(0)};
             double[] lons = new double[]{t.getX(0), t.getX(1), t.getX(2), t.getX(0)};
             area += area(new Polygon(lats, lons));
@@ -145,7 +145,7 @@ public class TriangulatorTest {
         return area;
     }
 
-    private void checkTriangleEdgesFromPolygon(Polygon p, TessellatorX.Triangle t) {
+    private void checkTriangleEdgesFromPolygon(Polygon p, Tessellator.Triangle t) {
         // first edge
         assertEquals(t.isEdgefromPolygon(0), isEdgeFromPolygon(p, t.getX(0), t.getY(0), t.getX(1), t.getY(1)));
         // second edge

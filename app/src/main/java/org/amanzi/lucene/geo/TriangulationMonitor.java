@@ -2,7 +2,7 @@ package org.amanzi.lucene.geo;
 
 import org.apache.lucene.geo.Point;
 import org.apache.lucene.geo.Polygon;
-import org.apache.lucene.geo.TessellatorX;
+import org.apache.lucene.geo.Tessellator;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,10 +12,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
-public class TriangulationMonitor implements TessellatorX.Monitor {
+public class TriangulationMonitor implements Tessellator.Monitor {
     private final String name;
     private final Config config;
     private final Polygon polygon;
@@ -80,9 +80,9 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
         return name + "-" + indexString.substring(indexString.length() - 5) + ".png";
     }
 
-    private void drawTriangles(Graphics2D graphics, Color color, Stroke stroke, List<TessellatorX.Triangle> tessellation) {
+    private void drawTriangles(Graphics2D graphics, Color color, Stroke stroke, List<Tessellator.Triangle> tessellation) {
         graphics.setStroke(stroke);
-        for (TessellatorX.Triangle t : tessellation) {
+        for (Tessellator.Triangle t : tessellation) {
             Path2D.Double triangle = new Path2D.Double();
             for (int j = 0; j < 3; j++) {
                 int i = j % 3;
@@ -295,7 +295,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
         graphics.drawLine(px, py, fx, fy);
     }
 
-    private void drawBaseImage(Graphics2D graphics, String status, List<TessellatorX.Triangle> tessellation, List<Label> labels) {
+    private void drawBaseImage(Graphics2D graphics, String status, List<Tessellator.Triangle> tessellation, List<Label> labels) {
         graphics.setColor(background);
         graphics.fillRect(0, 0, config.width, config.height);
         boolean ignoreHoleLabels = status != null && (status.contains("CURE") || status.contains("SPLIT"));
@@ -321,7 +321,7 @@ public class TriangulationMonitor implements TessellatorX.Monitor {
     }
 
     @Override
-    public void currentState(String status, List<Point> points, List<TessellatorX.Triangle> tessellation) {
+    public void currentState(String status, List<Point> points, List<Tessellator.Triangle> tessellation) {
         Path imagePath = Path.of(config.path.resolve(name).toString(), fileName());
         if (config.verbose) System.out.println("Saving image: " + imagePath);
         BufferedImage bi = new BufferedImage(config.width, config.height, BufferedImage.TYPE_INT_RGB);
