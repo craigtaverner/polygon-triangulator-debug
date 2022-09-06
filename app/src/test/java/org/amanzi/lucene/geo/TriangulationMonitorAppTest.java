@@ -18,13 +18,13 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class AppTest {
+public class TriangulationMonitorAppTest {
     @Test
     public void shouldFailOnMissingName() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
-        App.main(new String[]{});
-        assertExpectedHelpOutput(output.toString(), false, false, App.DEFAULT_DIR, App.DEFAULT_WIDTH, App.DEFAULT_HEIGHT, App.DEFAULT_MARGIN);
+        TriangulationMonitorApp.main(new String[]{});
+        assertExpectedHelpOutput(output.toString(), false, false, TriangulationMonitorApp.DEFAULT_DIR, TriangulationMonitorApp.DEFAULT_WIDTH, TriangulationMonitorApp.DEFAULT_HEIGHT, TriangulationMonitorApp.DEFAULT_MARGIN);
     }
 
     @Test
@@ -34,9 +34,9 @@ public class AppTest {
             System.setOut(new PrintStream(out));
             ByteArrayOutputStream err = new ByteArrayOutputStream();
             System.setErr(new PrintStream(err));
-            App.main(new String[]{unknown});
+            TriangulationMonitorApp.main(new String[]{unknown});
             assertThat("Expected error message", err.toString(), containsString("Unknown option: " + unknown));
-            assertThat("Expected help output", out.toString(), containsString("usage: lucene"));
+            assertThat("Expected help output", out.toString(), containsString("usage: polygon"));
         }
     }
 
@@ -44,8 +44,8 @@ public class AppTest {
     public void shouldUnderstandOptions() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         System.setOut(new PrintStream(out));
-        App.main(new String[]{"-v", "-l", "-D", "/tmp/another", "-W", "5000", "-H", "3000", "-M", "1234"});
-        assertThat("Expected help output", out.toString(), containsString("usage: lucene"));
+        TriangulationMonitorApp.main(new String[]{"-v", "-l", "-D", "/tmp/another", "-W", "5000", "-H", "3000", "-M", "1234"});
+        assertThat("Expected help output", out.toString(), containsString("usage: polygon"));
         assertExpectedHelpOutput(out.toString(), true, true, "/tmp/another", 5000, 3000, 1234);
     }
 
@@ -53,7 +53,7 @@ public class AppTest {
     public void shouldFailOnMissingClasspathFile() {
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         System.setErr(new PrintStream(err));
-        App.main(new String[]{"invalid"});
+        TriangulationMonitorApp.main(new String[]{"invalid"});
         assertThat("Expected error message", err.toString(), containsString("resource not found: invalid.geojson.gz"));
     }
 
@@ -61,9 +61,9 @@ public class AppTest {
     public void shouldFailOnMissingPathFile() {
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         System.setErr(new PrintStream(err));
-        App.main(new String[]{"src/main/resources/org/apache/lucene/geo/invalid.geojson.gz"});
+        TriangulationMonitorApp.main(new String[]{"src/main/resources/org/apache/lucene/geo/invalid.geojson.gz"});
         assertThat("Expected error message", err.toString(), containsString("invalid.geojson.gz (No such file or directory)"));
-        assertThat("Expected many image files", countFilesIn(App.DEFAULT_DIR, "lucene-10563-1"), greaterThan(100));
+        assertThat("Expected many image files", countFilesIn(TriangulationMonitorApp.DEFAULT_DIR, "lucene-10563-1"), greaterThan(100));
     }
 
     @Test
@@ -72,10 +72,10 @@ public class AppTest {
         System.setOut(new PrintStream(out));
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         System.setErr(new PrintStream(err));
-        App.main(new String[]{"lucene-10563-1"});
+        TriangulationMonitorApp.main(new String[]{"lucene-10563-1"});
         assertThat("Did not expect an error message", err.toString(), is(emptyString()));
         assertThat("Expected polygon WKT", out.toString(), containsString("POLYGON("));
-        assertThat("Expected many image files", countFilesIn(App.DEFAULT_DIR, "lucene-10563-1"), greaterThan(400));
+        assertThat("Expected many image files", countFilesIn(TriangulationMonitorApp.DEFAULT_DIR, "lucene-10563-1"), greaterThan(400));
     }
 
     @Test
@@ -84,14 +84,14 @@ public class AppTest {
         System.setOut(new PrintStream(out));
         ByteArrayOutputStream err = new ByteArrayOutputStream();
         System.setErr(new PrintStream(err));
-        App.main(new String[]{"src/main/resources/org/apache/lucene/geo/lucene-10563-1.geojson.gz"});
+        TriangulationMonitorApp.main(new String[]{"src/main/resources/org/apache/lucene/geo/lucene-10563-1.geojson.gz"});
         assertThat("Did not expect an error message", err.toString(), is(emptyString()));
         assertThat("Expected polygon WKT", out.toString(), containsString("POLYGON("));
-        assertThat("Expected many image files", countFilesIn(App.DEFAULT_DIR, "lucene-10563-1"), greaterThan(400));
+        assertThat("Expected many image files", countFilesIn(TriangulationMonitorApp.DEFAULT_DIR, "lucene-10563-1"), greaterThan(400));
     }
 
     private void assertExpectedHelpOutput(String text, boolean verbose, boolean labels, String dir, int width, int height, int margin) {
-        assertThat("Expected help output", text, containsString("usage: lucene"));
+        assertThat("Expected help output", text, containsString("usage: polygon"));
         assertThat("Expected verbose " + verbose, text, containsString("Verbose output: " + verbose));
         assertThat("Expected labels " + verbose, text, containsString("Add labels to images: " + labels));
         assertThat("Expected dir " + dir, text, containsString("Set the output directory for image files: '" + dir));

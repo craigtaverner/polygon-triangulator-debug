@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
-public class App {
+public class TriangulationMonitorApp {
     public static String DEFAULT_DIR = "/tmp/tessellation";
     public static int DEFAULT_WIDTH = 1500;
     public static int DEFAULT_HEIGHT = 1000;
@@ -69,7 +69,7 @@ public class App {
                     %n""", verbose, labels, dir, width, height, margin, dir);
         } else {
             TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of(dir), width, height, margin, verbose, labels);
-            App app = new App();
+            TriangulationMonitorApp app = new TriangulationMonitorApp();
             for (String name : names) {
                 try {
                     if (name.contains("/")) {

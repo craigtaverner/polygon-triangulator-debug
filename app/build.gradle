@@ -40,5 +40,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.amanzi.lucene.geo.App'
+    mainClass = 'org.amanzi.lucene.geo.TriangulationMonitorApp'
 }
