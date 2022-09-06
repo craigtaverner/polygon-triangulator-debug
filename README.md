@@ -9,7 +9,10 @@ of the internal linked-list of nodes and set of completed triangles generated so
 
 The images can be stitched together into a video using tools like `ffmpeg`:
 
-    ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+```bash
+ffmpeg -r 5 -i /tmp/tessellation/polygon-1/polygon-1-%%05d.png -c:v libx264 \
+  -vf fps=25 -pix_fmt yuv420p polygon-1.mp4
+```
 
 There are two ways to run the monitor:
 
@@ -20,49 +23,63 @@ There are two ways to run the monitor:
 
 Consider a test within Lucene, for example:
 
-    @Test
-    public void testComplexPolygon48() throws Exception {
-        String geoJson = PolygonUtils.readShape("lucene-10470-3.geojson.gz");
-        Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
-        for (Polygon polygon : polygons) {
-            List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true);
-            // calculate the area of big polygons have numerical error
-            assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (Tessellator.Triangle t : tessellation) {
-                checkTriangleEdgesFromPolygon(polygon, t);
-            }
+```java
+@Test
+public void testComplexPolygon48() throws Exception {
+    String geoJson = PolygonUtils.readShape("lucene-10470-3.geojson.gz");
+    Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
+    for (Polygon polygon : polygons) {
+        List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true);
+        // calculate the area of big polygons have numerical error
+        assertEquals(area(polygon), area(tessellation), 1e-11);
+        for (Tessellator.Triangle t : tessellation) {
+            checkTriangleEdgesFromPolygon(polygon, t);
         }
     }
+}
+```
 
 It is as simple as adding an extra argument to the `Tessellator.tesselate()` call:
 
-    Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10470-3", polygon, imageConfig));
+```java
+Tessellator.tessellate(polygon, true,
+    new TriangulationMonitor("lucene-10470-3", polygon, imageConfig));
+```
 
 Where the `imageConfig` defines the size of images to generate:
 
-    TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100);
+```java
+TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(
+    Path.of("/tmp/tessellation"), 1500, 1000, 100);
+```
 
 If the polygons are not too large, it is particularly useful to show labels of the vertices of the polygons and the
 internal linked-list using:
 
-    imageConfig.withLabels();
+```java
+imageConfig.withLabels();
+```
 
 A complete test that includes this could look like:
 
-    @Test
-    public void testComplexPolygon48() throws Exception {
-        TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100).withLabels();
-        String geoJson = PolygonUtils.readShape("lucene-10563-3.geojson.gz");
-        Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
-        for (Polygon polygon : polygons) {
-            List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
-            // calculate the area of big polygons have numerical error
-            assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (Tessellator.Triangle t : tessellation) {
-                checkTriangleEdgesFromPolygon(polygon, t);
-            }
+```java
+@Test
+public void testComplexPolygon48() throws Exception {
+    TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(
+        Path.of("/tmp/tessellation"), 1500, 1000, 100).withLabels();
+    String geoJson = PolygonUtils.readShape("lucene-10563-3.geojson.gz");
+    Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
+    for (Polygon polygon : polygons) {
+        List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true,
+            new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
+        // calculate the area of big polygons have numerical error
+        assertEquals(area(polygon), area(tessellation), 1e-11);
+        for (Tessellator.Triangle t : tessellation) {
+            checkTriangleEdgesFromPolygon(polygon, t);
         }
     }
+}
+```
 
 Note in the two examples above we used different polygons:
 
@@ -74,20 +91,30 @@ Note in the two examples above we used different polygons:
 The image configuration above also specified the path to a directory to use.
 For example, if we use the following:
 
-    TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(Path.of("/tmp/tessellation"), 1500, 1000, 100);
-    Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig.withLabels()));
+```java
+TriangulationMonitor.Config imageConfig = new TriangulationMonitor.Config(
+    Path.of("/tmp/tessellation"), 1500, 1000, 100);
+Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-3", polygon,
+    imageConfig.withLabels()));
+```
 
 We will create a directory at `/tmp/tessellation/lucene-10563-3/` which will contain over 400 files with names
 like `lucene-10563-3-00043.png`.
 The counter starts at `0` and will increment for each image.
 This allows us to generate a video by combining the images with a tool like `ffmpeg`:
 
-    ffmpeg -r 5 -i /tmp/tessellation/lucene-10563-3/lucene-10563-3-%%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p lucene-10563-3.mp4
+```bash
+ffmpeg -r 5 -i /tmp/tessellation/lucene-10563-3/lucene-10563-3-%%05d.png -c:v libx264 \
+  -vf fps=25 -pix_fmt yuv420p lucene-10563-3.mp4
+```
 
 For relatively small polygons like `lucene-10563-1` a framerate of `5` works well to watch the progress of the triangulation.
 For much larger polygons like `lucene-10470-3` there are over 23 thousand images, and you should increase the framerate a lot:
 
-    ffmpeg -r 100 -i /tmp/tessellation/lucene-10470-3/lucene-10470-3-%05d.png -c:v libx264 -vf fps=25 -pix_fmt yuv420p lucene-10470-3.mp4
+```bash
+ffmpeg -r 100 -i /tmp/tessellation/lucene-10470-3/lucene-10470-3-%05d.png -c:v libx264 \
+  -vf fps=25 -pix_fmt yuv420p lucene-10470-3.mp4
+```
 
 ## Command-line
 
@@ -120,12 +147,15 @@ the class `org.amanzi.lucene.geo.TriangulationMonitorApp`:
 
 For example the following command:
 
-    ./polygon-triangulator-debug -D docs/images -l -W 1000 -H 600 -M 50 app/src/main/resources/org/apache/lucene/geo/lucene-10563-1.geojson.gz
+```bash
+./polygon-triangulator-debug -D docs/images -l -W 1000 -H 600 -M 50 \
+  app/src/main/resources/org/apache/lucene/geo/lucene-10563-1.geojson.gz
+```
 
 Would make images starting with:
 
 ![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00000.png?raw=true "Lucene-10563-1 Polygon")
 
-About half way through the triangulation algorithm, we would see:
+About half-way through the triangulation algorithm, we would see:
 
 ![Lucene-10563-1 Polygon](docs/images/lucene-10563-1/lucene-10563-1-00200.png?raw=true "Lucene-10563-1 Polygon")
