@@ -28,7 +28,7 @@ Consider a test within Lucene, for example:
             List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true);
             // calculate the area of big polygons have numerical error
             assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (TessellatorX.Triangle t : tessellation) {
+            for (Tessellator.Triangle t : tessellation) {
                 checkTriangleEdgesFromPolygon(polygon, t);
             }
         }
@@ -55,10 +55,10 @@ A complete test that includes this could look like:
         String geoJson = PolygonUtils.readShape("lucene-10563-3.geojson.gz");
         Polygon[] polygons = Polygon.fromGeoJSON(geoJson);
         for (Polygon polygon : polygons) {
-            List<TessellatorX.Triangle> tessellation = TessellatorX.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
+            List<Tessellator.Triangle> tessellation = Tessellator.tessellate(polygon, true, new TriangulationMonitor("lucene-10563-3", polygon, imageConfig));
             // calculate the area of big polygons have numerical error
             assertEquals(area(polygon), area(tessellation), 1e-11);
-            for (TessellatorX.Triangle t : tessellation) {
+            for (Tessellator.Triangle t : tessellation) {
                 checkTriangleEdgesFromPolygon(polygon, t);
             }
         }
